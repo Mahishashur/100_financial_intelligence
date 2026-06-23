@@ -1,0 +1,13 @@
+file,rows,duplicates,missing,missing_pct
+analysis_clean.csv,21,0,0,0.0
+balancesheet_clean.csv,1313,0,0,0.0
+cashflow_clean.csv,1188,0,8,0.1
+companies_clean.csv,93,0,9,0.81
+documents_clean.csv,1586,0,52,0.82
+financial_ratios_clean.csv,1184,0,170,0.9
+market_cap_clean.csv,552,0,0,0.0
+peer_groups_clean.csv,56,0,0,0.0
+profitandloss_clean.csv,1277,0,231,1.21
+prosandcons_clean.csv,17,0,6,8.82
+sectors_clean.csv,92,0,0,0.0
+stock_prices_clean.csv,5520,0,0,0.0
