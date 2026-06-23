@@ -6,20 +6,38 @@ conn = sqlite3.connect(
 "nifty100.db"
 )
 
+tables = [
 
-q="""
+"companies",
 
-SELECT
-name
+"profitandloss",
 
-FROM sqlite_master
+"balancesheet",
 
-WHERE type='table'
+"cashflow",
+
+"stock_prices"
+
+]
+
+
+for t in tables:
+
+    print(
+        f"\n=== {t} ==="
+    )
+
+    q=f"""
+
+SELECT *
+
+FROM {t}
+
+LIMIT 5
 
 """
 
-
-print(
+    print(
 
 pd.read_sql(
 q,
@@ -27,3 +45,5 @@ conn
 )
 
 )
+
+conn.close()

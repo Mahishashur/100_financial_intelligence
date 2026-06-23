@@ -9,14 +9,25 @@ OUT.mkdir(exist_ok=True)
 
 def clean_columns(df):
 
-    df.columns = (
+     df.columns = (
+
         df.columns
+
+        .astype(str)
+
         .str.strip()
+
         .str.lower()
-        .str.replace(" ", "_")
+
+        .str.replace(" ","_")
+
+        .str.replace("-","_")
+
     )
 
-    return df
+     df = df.loc[:, ~df.columns.str.contains("unnamed")]
+
+     return df
 
 
 def process_folder():
@@ -28,7 +39,15 @@ def process_folder():
 
         print(f"Loading {f.name}")
 
-        df = pd.read_excel(f)
+        if "stock_prices" in f.name:
+
+         df = pd.read_excel(f,header=0
+    )
+
+        else:
+
+            df = pd.read_excel(f,header=1
+    )
 
         df = clean_columns(df)
 

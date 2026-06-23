@@ -34,7 +34,8 @@ for f in files:
     )
 
     df = pd.read_csv(
-        f
+    f
+
     )
 
     df.to_sql(
