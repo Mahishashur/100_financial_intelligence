@@ -39,15 +39,13 @@ def process_folder():
 
         print(f"Loading {f.name}")
 
-        if "stock_prices" in f.name:
+        if "stock_prices" in f.name or "sectors" in f.name :
 
-         df = pd.read_excel(f,header=0
-    )
+            df = pd.read_excel(f,header=0)
 
         else:
 
-            df = pd.read_excel(f,header=1
-    )
+            df = pd.read_excel(f,header=1)
 
         df = clean_columns(df)
 
