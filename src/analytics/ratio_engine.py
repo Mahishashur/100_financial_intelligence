@@ -52,8 +52,7 @@ df["net_profit_margin_pct"] = df.apply(
     lambda row: calculate_npm(
         row["sales"],
         row["net_profit"]
-    ),
-    axis=1
+    ),axis=1
 )
 
 
@@ -61,8 +60,7 @@ df["opm_calculated_pct"] = df.apply(
     lambda row: calculate_opm(
         row["sales"],
         row["operating_profit"]
-    ),
-    axis=1
+    ),axis=1
 )
 
 
@@ -71,8 +69,7 @@ df["roe_calculated_pct"] = df.apply(
         row["net_profit"],
         row["equity_capital"],
         row["reserves"]
-    ),
-    axis=1
+    ),axis=1
 )
 
 
@@ -82,8 +79,7 @@ df["roce_calculated_pct"] = df.apply(
         row["equity_capital"],
         row["reserves"],
         row["borrowings"]
-    ),
-    axis=1
+    ),axis=1
 )
 
 
@@ -91,8 +87,7 @@ df["roa_calculated_pct"] = df.apply(
     lambda row: calculate_roa(
         row["net_profit"],
         row["total_assets"]
-    ),
-    axis=1
+    ),axis=1
 )
 
 print(df.head())
