@@ -44,3 +44,109 @@ def calculate_roa(net_profit,total_assets):
     if total_assets <= 0:
         return None
     return round((net_profit / total_assets) * 100,2)
+
+
+# ==========================
+# DEBT TO EQUITY
+# ==========================
+
+def calculate_debt_to_equity(
+    borrowings,
+    equity_capital,
+    reserves
+):
+
+    if borrowings == 0:
+        return 0
+
+    total_equity = (
+        equity_capital + reserves
+    )
+
+    if total_equity <= 0:
+        return None
+
+    return round(
+        borrowings / total_equity,2
+        
+    )
+    
+    
+    # ==========================
+# HIGH LEVERAGE FLAG
+# ==========================
+
+def high_leverage_flag(
+    debt_to_equity,
+    broad_sector
+):
+
+    if debt_to_equity is None:
+        return False
+
+    if str(broad_sector).lower() == "financials":
+        return False
+
+    return debt_to_equity > 5
+
+
+# ==========================
+# INTEREST COVERAGE RATIO
+# ==========================
+
+def calculate_interest_coverage(
+    operating_profit,
+    other_income,
+    interest
+):
+
+    if interest == 0:
+        return None
+
+    return round(
+
+        (operating_profit + other_income) / interest,2
+
+    )
+    
+    
+    # ==========================
+# ICR LABEL
+# ==========================
+
+def get_icr_label(interest):
+
+    if interest == 0:
+        return "Debt Free"
+
+    return "Has Debt"
+
+
+# ==========================
+# NET DEBT
+# ==========================
+
+def calculate_net_debt(
+    borrowings,
+    investments
+):
+
+    return borrowings - investments
+
+
+# ==========================
+# ASSET TURNOVER
+# ==========================
+
+def calculate_asset_turnover(
+    sales,
+    total_assets
+):
+
+    if total_assets <= 0:
+        return None
+
+    return round(
+        sales / total_assets,
+        2
+    )

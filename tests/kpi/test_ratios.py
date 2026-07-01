@@ -3,7 +3,14 @@ from src.analytics.ratios import (
     calculate_opm,
     calculate_roe,
     calculate_roce,
-    calculate_roa
+    calculate_roa,
+     calculate_debt_to_equity,
+
+    calculate_interest_coverage,
+
+    calculate_net_debt,
+
+    calculate_asset_turnover
 )
 
 
@@ -106,3 +113,103 @@ def test_roce_zero_capital():
 
 def test_roa_zero_assets():
     assert calculate_roa(100, 0) is None
+    
+    
+# ----------------------------
+# DEBT TO EQUITY
+# ----------------------------
+
+def test_debt_to_equity():
+
+    assert calculate_debt_to_equity(
+
+        500,
+
+        100,
+
+        400
+
+    ) == 1
+
+
+def test_debt_free():
+
+    assert calculate_debt_to_equity(
+
+        0,
+
+        100,
+
+        400
+
+    ) == 0
+
+
+# ----------------------------
+# INTEREST COVERAGE
+# ----------------------------
+
+def test_interest_coverage():
+
+    assert calculate_interest_coverage(
+
+        500,
+
+        100,
+
+        100
+
+    ) == 6
+
+
+def test_interest_zero():
+
+    assert calculate_interest_coverage(
+
+        500,
+
+        100,
+
+        0
+
+    ) is None
+
+
+# ----------------------------
+# NET DEBT
+# ----------------------------
+
+def test_net_debt():
+
+    assert calculate_net_debt(
+
+        1000,
+
+        200
+
+    ) == 800
+
+
+# ----------------------------
+# ASSET TURNOVER
+# ----------------------------
+
+def test_asset_turnover():
+    assert calculate_asset_turnover(
+
+        2000,
+
+        1000
+
+        ) == 2
+
+
+def test_asset_turnover_zero_assets():
+
+    assert calculate_asset_turnover(
+
+        2000,
+
+        0
+
+    ) is None
