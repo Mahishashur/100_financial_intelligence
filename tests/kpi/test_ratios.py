@@ -4,13 +4,12 @@ from src.analytics.ratios import (
     calculate_roe,
     calculate_roce,
     calculate_roa,
-     calculate_debt_to_equity,
-
+    calculate_debt_to_equity,
     calculate_interest_coverage,
-
+    calculate_free_cash_flow,
     calculate_net_debt,
-
-    calculate_asset_turnover
+    calculate_asset_turnover,
+    calculate_free_cash_flow
 )
 
 
@@ -115,101 +114,48 @@ def test_roa_zero_assets():
     assert calculate_roa(100, 0) is None
     
     
-# ----------------------------
-# DEBT TO EQUITY
-# ----------------------------
+# Debt to equity
 
 def test_debt_to_equity():
 
-    assert calculate_debt_to_equity(
-
-        500,
-
-        100,
-
-        400
-
-    ) == 1
+    assert calculate_debt_to_equity(500,100,400) == 1
 
 
 def test_debt_free():
 
-    assert calculate_debt_to_equity(
-
-        0,
-
-        100,
-
-        400
-
-    ) == 0
+    assert calculate_debt_to_equity(0,100,400) == 0
 
 
-# ----------------------------
-# INTEREST COVERAGE
-# ----------------------------
+# Interest coverage
 
 def test_interest_coverage():
 
-    assert calculate_interest_coverage(
-
-        500,
-
-        100,
-
-        100
-
-    ) == 6
+    assert calculate_interest_coverage(500,100,100) == 6
 
 
 def test_interest_zero():
 
-    assert calculate_interest_coverage(
-
-        500,
-
-        100,
-
-        0
-
-    ) is None
+    assert calculate_interest_coverage(500,100,0) is None
 
 
-# ----------------------------
-# NET DEBT
-# ----------------------------
+# Net debt
 
 def test_net_debt():
 
-    assert calculate_net_debt(
+    assert calculate_net_debt(1000,200) == 800
 
-        1000,
-
-        200
-
-    ) == 800
-
-
-# ----------------------------
-# ASSET TURNOVER
-# ----------------------------
+# Asset turnover
 
 def test_asset_turnover():
-    assert calculate_asset_turnover(
-
-        2000,
-
-        1000
-
-        ) == 2
+    assert calculate_asset_turnover(2000,1000) == 2
 
 
 def test_asset_turnover_zero_assets():
 
     assert calculate_asset_turnover(
+        2000,0) is None
+    
+    
+def test_free_cash_flow():
 
-        2000,
-
-        0
-
-    ) is None
+    assert calculate_free_cash_flow(500,-200) == 300

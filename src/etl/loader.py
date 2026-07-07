@@ -8,6 +8,8 @@ OUT.mkdir(exist_ok=True)
 
 
 def clean_columns(df):
+    
+    
 
      df.columns = (
 
@@ -32,30 +34,50 @@ def clean_columns(df):
 
 def process_folder():
 
-    files = list(RAW.glob("**/*.xlsx")
-    )
+    files = list(RAW.glob("**/*.xlsx"))
 
     for f in files:
 
         print(f"Loading {f.name}")
 
-        if "stock_prices" in f.name or "sectors" in f.name :
-
-            df = pd.read_excel(f,header=0)
-
+        if "stock_prices" in f.name or "sectors" in f.name:
+            df = pd.read_excel(f, header=0)
         else:
-
-            df = pd.read_excel(f,header=1)
+            df = pd.read_excel(f, header=1)
 
         df = clean_columns(df)
 
-        save = (OUT /f"{f.stem}_clean.csv"
-        )
+        if f.stem == "cashflow":
 
-        df.to_csv(save,index=False)
+            print("Removing duplicate cashflow records...")
 
-        print(f"Saved  {save}")
+            df = df.drop_duplicates(
+                subset=["company_id", "year"],
+                keep="last"
+            )
+
+        print("Rows after cleaning:", len(df))
+
+        save = OUT / f"{f.stem}_clean.csv"
+
+        df.to_csv(save, index=False)
+
+        print(f"Saved {save}")
 
 
 if __name__=="__main__":
     process_folder()
+    
+    
+import pandas as pd
+
+df = pd.read_csv("data/processed/cashflow_clean.csv")
+
+print("Rows:", len(df))
+
+dup = df[df.duplicated(
+    subset=["company_id", "year"],
+    keep=False
+)]
+
+print("Duplicate Count:", len(dup))

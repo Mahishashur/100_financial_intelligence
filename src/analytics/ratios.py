@@ -45,10 +45,7 @@ def calculate_roa(net_profit,total_assets):
         return None
     return round((net_profit / total_assets) * 100,2)
 
-
-# ==========================
-# DEBT TO EQUITY
-# ==========================
+# Debt to equity
 
 def calculate_debt_to_equity(
     borrowings,
@@ -71,10 +68,7 @@ def calculate_debt_to_equity(
         
     )
     
-    
-    # ==========================
-# HIGH LEVERAGE FLAG
-# ==========================
+# High leverage flag
 
 def high_leverage_flag(
     debt_to_equity,
@@ -90,14 +84,12 @@ def high_leverage_flag(
     return debt_to_equity > 5
 
 
-# ==========================
-# INTEREST COVERAGE RATIO
-# ==========================
+# Interest coverage ratio
 
 def calculate_interest_coverage(
     operating_profit,
     other_income,
-    interest
+    interest 
 ):
 
     if interest == 0:
@@ -109,10 +101,8 @@ def calculate_interest_coverage(
 
     )
     
-    
-    # ==========================
-# ICR LABEL
-# ==========================
+    # ICR label
+
 
 def get_icr_label(interest):
 
@@ -121,10 +111,7 @@ def get_icr_label(interest):
 
     return "Has Debt"
 
-
-# ==========================
-# NET DEBT
-# ==========================
+# NET debt
 
 def calculate_net_debt(
     borrowings,
@@ -133,10 +120,7 @@ def calculate_net_debt(
 
     return borrowings - investments
 
-
-# ==========================
-# ASSET TURNOVER
-# ==========================
+# Asset turnover
 
 def calculate_asset_turnover(
     sales,
@@ -146,7 +130,16 @@ def calculate_asset_turnover(
     if total_assets <= 0:
         return None
 
-    return round(
-        sales / total_assets,
-        2
-    )
+    return round(sales / total_assets,2)
+    
+# Free case flow
+
+def calculate_free_cash_flow(
+
+    operating_activity,
+
+    investing_activity
+
+):
+
+    return operating_activity + investing_activity
