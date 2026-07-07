@@ -4,3 +4,5 @@ def normalize_year(year):
 
 def normalize_ticker(ticker):
     return (str(ticker).strip().upper().replace(".NS","" ))
+
+

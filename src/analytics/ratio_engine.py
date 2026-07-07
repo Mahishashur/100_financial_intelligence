@@ -14,7 +14,8 @@ from ratios import (
     get_icr_label,
     calculate_net_debt,
     calculate_asset_turnover,
-    calculate_free_cash_flow
+    calculate_free_cash_flow,
+    calculate_cfo_quality
 
 
 )
@@ -776,7 +777,6 @@ WHERE company_id='ABB'
 
 print(pd.read_sql(query, conn))
 
-conn.close()    
 
 import pandas as pd
 
@@ -807,21 +807,52 @@ print(
         ]
     ]
 )
-print(cash_raw.columns.tolist())
 
-print("####################################")
+# CFO quality
 
-cash_raw = pd.read_excel(
-    "data/raw/core/cashflow.xlsx",
-    header=1
+query = """
+SELECT
+
+c.company_id,
+c.year,
+
+c.operating_activity,
+
+p.net_profit
+
+FROM cashflow c
+
+JOIN profitandloss p
+
+ON c.company_id = p.company_id
+
+AND c.year = p.year
+"""
+
+df = pd.read_sql(query, conn)
+df["cfo_quality"] = df.apply(
+
+    lambda row:
+
+    calculate_cfo_quality(
+
+        row["operating_activity"],
+
+        row["net_profit"]
+
+    ),axis=1
 )
 
-abb = cash_raw[cash_raw["company_id"] == "ABB"]
-
-print(abb.to_string())
+print("\nCFO QUALITY")
 
 print(
-    cash_raw[
-        cash_raw["company_id"] == "ABB"
-    ][["id", "year"]]
+    df[
+        [
+            "company_id",
+            "year",
+            "operating_activity",
+            "net_profit",
+            "cfo_quality"
+        ]].head(15)
 )
+conn.close()

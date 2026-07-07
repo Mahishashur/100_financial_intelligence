@@ -9,7 +9,8 @@ from src.analytics.ratios import (
     calculate_free_cash_flow,
     calculate_net_debt,
     calculate_asset_turnover,
-    calculate_free_cash_flow
+    calculate_free_cash_flow,
+    calculate_cfo_quality
 )
 
 
@@ -152,10 +153,15 @@ def test_asset_turnover():
 
 def test_asset_turnover_zero_assets():
 
-    assert calculate_asset_turnover(
-        2000,0) is None
+    assert calculate_asset_turnover(2000,0) is None
     
     
 def test_free_cash_flow():
 
     assert calculate_free_cash_flow(500,-200) == 300
+    
+    calculate_cfo_quality
+    
+def test_cfo_quality_zero_profit():
+
+    assert calculate_cfo_quality(100,0) is None

@@ -143,3 +143,15 @@ def calculate_free_cash_flow(
 ):
 
     return operating_activity + investing_activity
+
+
+def calculate_cfo_quality(
+    operating_activity,
+    net_profit ):
+
+    if net_profit == 0:
+        return None
+
+    return round(
+        operating_activity / net_profit,2
+    )
