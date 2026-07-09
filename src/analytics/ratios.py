@@ -155,3 +155,198 @@ def calculate_cfo_quality(
     return round(
         operating_activity / net_profit,2
     )
+    
+    
+def calculate_fcf_conversion(
+    free_cash_flow,
+    net_profit
+):
+
+    if net_profit <= 0:
+        return None
+
+    return round(
+        free_cash_flow / net_profit,2
+    )
+    
+
+def calculate_capex_intensity(
+    operating_activity,
+    investing_activity):
+
+    if operating_activity <= 0:
+        return None
+
+    return round(
+        abs(investing_activity) / operating_activity,2
+    )
+    
+    
+def calculate_ocf_margin(
+    operating_activity,
+    sales
+):
+
+    if sales <= 0:
+        return None
+
+    return round(
+        (operating_activity / sales) * 100,2
+    )
+    
+    
+def calculate_cash_conversion_ratio(
+    operating_activity,
+    operating_profit
+):
+
+    if operating_profit <= 0:
+        return None
+
+    return round(
+        operating_activity / operating_profit,2
+    )
+    
+    
+def calculate_cash_reinvestment_ratio(
+    operating_activity,
+    fixed_assets):
+
+    if fixed_assets <= 0:
+        return None
+
+    return round(
+        operating_activity / fixed_assets,2
+    )
+    
+    
+def calculate_cash_reinvestment_ratio(
+    operating_activity,
+    fixed_assets
+):
+
+    if fixed_assets <= 0:
+        return None
+
+    return round(
+        operating_activity / fixed_assets,2
+    )
+    
+    
+def calculate_retention_ratio(
+    dividend_payout):
+
+    if dividend_payout is None:
+        return None
+
+    return round(
+        1 - (dividend_payout / 100),2
+    )
+    
+    
+def calculate_retention_ratio(
+    dividend_payout):
+
+    if dividend_payout is None:
+        return None
+
+    if dividend_payout < 0:
+        return None
+
+    return round(
+        1 - (dividend_payout / 100),2
+    )
+    
+    
+def calculate_financial_leverage(
+    total_assets,
+    equity_capital,
+    reserves):
+
+    equity = equity_capital + reserves
+
+    if equity <= 0:
+        return None
+
+    return round(total_assets / equity, 2)
+
+
+def calculate_debt_ratio(
+    borrowings,
+    total_assets):
+
+    if total_assets <= 0:
+        return None
+
+    return round(
+        borrowings / total_assets,2
+    )
+    
+
+def calculate_capital_employed_turnover(
+    sales,
+    equity_capital,
+    reserves,
+    borrowings):
+
+    capital_employed = equity_capital + reserves + borrowings
+
+    if capital_employed <= 0:
+        return None
+
+    return round(
+        sales / capital_employed,2
+    )
+    
+    
+def calculate_net_asset_turnover(
+    sales,
+    total_assets,
+    investments
+):
+
+    net_assets = total_assets - investments
+
+    if net_assets <= 0:
+        return None
+
+    return round(
+        sales / net_assets,2
+    )
+    
+    
+def calculate_investment_ratio(
+    investments,
+    total_assets):
+
+    if total_assets <= 0:
+        return None
+
+    return round(
+        investments / total_assets,2
+    )
+    
+    
+def calculate_fixed_asset_ratio(
+    fixed_assets,
+    total_assets
+):
+
+    if total_assets <= 0:
+        return None
+
+    return round(
+        fixed_assets / total_assets,2
+    )
+   
+   
+def calculate_reserve_to_equity_ratio(
+    reserves,
+    equity_capital):
+
+    if equity_capital <= 0:
+        return None
+
+    return round(
+        reserves / equity_capital,2
+    ) 

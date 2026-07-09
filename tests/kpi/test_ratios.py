@@ -10,7 +10,22 @@ from src.analytics.ratios import (
     calculate_net_debt,
     calculate_asset_turnover,
     calculate_free_cash_flow,
-    calculate_cfo_quality
+    calculate_cfo_quality,
+    calculate_fcf_conversion,
+    calculate_capex_intensity,
+    calculate_ocf_margin,
+    calculate_cash_conversion_ratio,
+    calculate_cash_reinvestment_ratio,
+    calculate_cash_reinvestment_ratio,
+    calculate_retention_ratio,
+    calculate_retention_ratio,
+    calculate_financial_leverage,
+    calculate_debt_ratio,
+    calculate_capital_employed_turnover,
+    calculate_net_asset_turnover,
+    calculate_investment_ratio,
+    calculate_fixed_asset_ratio,
+    calculate_reserve_to_equity_ratio
 )
 
 
@@ -165,3 +180,232 @@ def test_free_cash_flow():
 def test_cfo_quality_zero_profit():
 
     assert calculate_cfo_quality(100,0) is None
+    
+    
+def test_fcf_conversion():
+
+    assert calculate_fcf_conversion(
+        200,100) == 2
+
+
+def test_fcf_conversion_zero_profit():
+
+    assert calculate_fcf_conversion(100,0) is None
+    
+def test_fcf_conversion_negative_profit():
+
+    assert calculate_fcf_conversion(100,-10) is None
+    
+    
+def test_capex_intensity():
+
+    assert calculate_capex_intensity(1000,-400) == 0.40
+
+def test_capex_intensity_zero_operating():
+
+    assert calculate_capex_intensity(0,-200) is None
+
+
+def test_capex_intensity_negative_operating():
+
+    assert calculate_capex_intensity(-100,-50) is None
+
+
+def test_ocf_margin():
+
+    assert calculate_ocf_margin(200,1000) == 20
+
+
+def test_ocf_margin_zero_sales():
+
+    assert calculate_ocf_margin(100,0) is None
+
+
+def test_ocf_margin_negative_sales():
+
+    assert calculate_ocf_margin(100,-100) is None
+    
+    
+def test_cash_conversion_ratio():
+
+    assert calculate_cash_conversion_ratio(200,100) == 2
+
+
+def test_cash_conversion_ratio_zero_profit():
+
+    assert calculate_cash_conversion_ratio(100,0) is None
+
+
+def test_cash_conversion_ratio_negative_profit():
+
+    assert calculate_cash_conversion_ratio(100,-50) is None
+
+    
+def test_cash_reinvestment_ratio():
+
+    assert calculate_cash_reinvestment_ratio(500,250) == 2
+
+
+def test_cash_reinvestment_zero_assets():
+
+    assert calculate_cash_reinvestment_ratio(100,0) is None
+
+
+def test_cash_reinvestment_negative_assets():
+
+    assert calculate_cash_reinvestment_ratio(100,-10 ) is None
+    
+    
+def test_cash_reinvestment_ratio():
+
+    assert calculate_cash_reinvestment_ratio(500,250) == 2
+
+
+def test_cash_reinvestment_zero_assets():
+
+    assert calculate_cash_reinvestment_ratio(100,0) is None
+
+
+def test_cash_reinvestment_negative_assets():
+
+    assert calculate_cash_reinvestment_ratio(100,-20) is None
+    
+    
+def test_retention_ratio():
+
+    assert calculate_retention_ratio(20) == 0.80
+
+
+def test_retention_ratio_zero():
+
+    assert calculate_retention_ratio(0) == 1.00
+
+
+def test_retention_ratio_full():
+
+    assert calculate_retention_ratio(100) == 0.00
+    
+    
+def test_retention_ratio():
+
+    assert calculate_retention_ratio(20) == 0.80
+
+
+def test_retention_ratio_zero():
+
+    assert calculate_retention_ratio(0) == 1.00
+
+
+def test_retention_ratio_full():
+
+    assert calculate_retention_ratio(100) == 0.00
+
+
+def test_retention_ratio_negative():
+
+    assert calculate_retention_ratio(-10) is None
+    
+
+def test_financial_leverage():
+
+    assert calculate_financial_leverage(1000,200,300) == 2.00
+
+
+def test_financial_leverage_zero_equity():
+
+    assert calculate_financial_leverage(1000,0,0) is None
+
+
+def test_financial_leverage_negative_equity():
+
+    assert calculate_financial_leverage(1000,-100,50) is None
+    
+    
+def test_debt_ratio():
+
+    assert calculate_debt_ratio(500,1000) == 0.50
+
+
+def test_debt_ratio_zero_assets():
+
+    assert calculate_debt_ratio(500,0) is None
+
+
+def test_debt_ratio_negative_assets():
+
+    assert calculate_debt_ratio(500,-100) is None
+    
+    
+def test_capital_employed_turnover():
+
+    assert calculate_capital_employed_turnover(1000,200,300,500) == 1.00
+
+
+def test_capital_employed_turnover_zero():
+
+    assert calculate_capital_employed_turnover(1000,0,0,0) is None
+
+
+def test_capital_employed_turnover_negative():
+
+    assert calculate_capital_employed_turnover(1000,-100,50,0) is None
+    
+
+def test_net_asset_turnover():
+
+    assert calculate_net_asset_turnover(1000,800,300) == 2.00
+
+
+def test_net_asset_turnover_zero_assets():
+
+    assert calculate_net_asset_turnover(1000,500,500) is None
+
+
+def test_net_asset_turnover_negative_assets():
+
+    assert calculate_net_asset_turnover(1000,400,500) is None
+    
+    
+def test_investment_ratio():
+
+    assert calculate_investment_ratio(200,1000) == 0.20
+
+
+def test_investment_ratio_zero_assets():
+
+    assert calculate_investment_ratio(200,0) is None
+
+
+def test_investment_ratio_negative_assets():
+
+    assert calculate_investment_ratio(200,-100) is None
+    
+    
+def test_fixed_asset_ratio():
+
+    assert calculate_fixed_asset_ratio(500,1000) == 0.50
+
+
+def test_fixed_asset_ratio_zero_assets():
+
+    assert calculate_fixed_asset_ratio(500,0) is None
+
+
+def test_fixed_asset_ratio_negative_assets():
+
+    assert calculate_fixed_asset_ratio(500,-100) is None
+    
+    
+def test_reserve_to_equity_ratio():
+
+    assert calculate_reserve_to_equity_ratio(500,100) == 5.00
+
+
+def test_reserve_to_equity_ratio_zero_equity():
+
+    assert calculate_reserve_to_equity_ratio(500,0) is None
+
+
+def test_reserve_to_equity_ratio_negative_equity():
+
+    assert calculate_reserve_to_equity_ratio(500,-100) is None

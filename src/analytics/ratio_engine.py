@@ -2,12 +2,6 @@ import sqlite3
 import pandas as pd
 
 from ratios import (
-
-    calculate_npm,
-    calculate_opm,
-    calculate_roe,
-    calculate_roce,
-    calculate_roa,
     calculate_debt_to_equity,
     high_leverage_flag,
     calculate_interest_coverage,
@@ -15,10 +9,23 @@ from ratios import (
     calculate_net_debt,
     calculate_asset_turnover,
     calculate_free_cash_flow,
-    calculate_cfo_quality
-
-
+    calculate_cfo_quality,
+    calculate_fcf_conversion,
+    calculate_capex_intensity,
+    calculate_ocf_margin,
+    calculate_cash_conversion_ratio,
+    calculate_cash_reinvestment_ratio,
+    calculate_retention_ratio,
+    calculate_financial_leverage,
+    calculate_debt_ratio,
+    calculate_capital_employed_turnover,
+    calculate_net_asset_turnover,
+    calculate_investment_ratio,
+    calculate_fixed_asset_ratio,
+     calculate_reserve_to_equity_ratio
 )
+
+from profitability_engine import profitability_analysis
 
 conn = sqlite3.connect("nifty100.db")
 
@@ -62,50 +69,7 @@ df = pd.read_sql(query, conn)
 print(df.head())
 print("\nRows:", len(df))
 
-
-df["net_profit_margin_pct"] = df.apply(
-    lambda row: calculate_npm(
-        row["sales"],
-        row["net_profit"]
-    ),axis=1
-)
-
-
-df["opm_calculated_pct"] = df.apply(
-    lambda row: calculate_opm(
-        row["sales"],
-        row["operating_profit"]
-    ),axis=1
-)
-
-
-df["roe_calculated_pct"] = df.apply(
-    lambda row: calculate_roe(
-        row["net_profit"],
-        row["equity_capital"],
-        row["reserves"]
-    ),axis=1
-)
-
-
-df["roce_calculated_pct"] = df.apply(
-    lambda row: calculate_roce(
-        row["operating_profit"],
-        row["equity_capital"],
-        row["reserves"],
-        row["borrowings"]
-    ),axis=1
-)
-
-
-df["roa_calculated_pct"] = df.apply(
-    lambda row: calculate_roa(
-        row["net_profit"],
-        row["total_assets"]
-    ),axis=1
-)
-
-print(df.head())
+df = profitability_analysis(df)
 
 df["debt_to_equity"] = df.apply(
 
@@ -797,8 +761,7 @@ abb = cash_raw[cash_raw["company_id"] == "ABB"]
 
 
 print(
-    abb[
-        [
+    abb[[
             "year",
             "operating_activity",
             "investing_activity",
@@ -846,8 +809,7 @@ df["cfo_quality"] = df.apply(
 print("\nCFO QUALITY")
 
 print(
-    df[
-        [
+    df[[
             "company_id",
             "year",
             "operating_activity",
@@ -855,4 +817,826 @@ print(
             "cfo_quality"
         ]].head(15)
 )
+
+
+# FCF conversion
+
+query = """
+SELECT
+
+c.company_id,
+c.year,
+
+c.operating_activity,
+c.investing_activity,
+
+p.net_profit
+
+FROM cashflow c
+
+JOIN profitandloss p
+
+ON c.company_id = p.company_id
+
+AND c.year = p.year
+"""
+
+df = pd.read_sql(query, conn)
+
+df["free_cash_flow"] = df.apply(
+
+    lambda row:
+
+    calculate_free_cash_flow(
+
+        row["operating_activity"],
+
+        row["investing_activity"]
+
+    ),axis=1
+)
+
+df["fcf_conversion"] = df.apply(
+
+    lambda row:
+
+    calculate_fcf_conversion(
+
+        row["free_cash_flow"],
+
+        row["net_profit"]
+
+    ),axis=1
+)
+
+print("\nFCF CONVERSION")
+
+print(df[[
+    "company_id",
+    "year",
+    "free_cash_flow",
+    "net_profit",
+    "fcf_conversion"
+]].head(15)
+
+)
+
+
+
+# CapEx intensity
+
+query = """
+SELECT
+
+company_id,
+year,
+
+operating_activity,
+investing_activity
+
+FROM cashflow
+"""
+
+df = pd.read_sql(query, conn)
+df["capex_intensity"] = df.apply(
+
+    lambda row:
+
+    calculate_capex_intensity(
+
+        row["operating_activity"],
+
+        row["investing_activity"]
+
+    ),axis=1
+)
+
+print("\nCAPEX INTENSITY")
+
+print(df[[
+    "company_id",
+    "year",
+    "operating_activity",
+    "investing_activity",
+    "capex_intensity"
+]].head(15)
+)
+
+
+# OCF margin
+
+query = """
+SELECT
+
+c.company_id,
+c.year,
+
+c.operating_activity,
+
+p.sales
+
+FROM cashflow c
+
+JOIN profitandloss p
+
+ON c.company_id = p.company_id
+
+AND c.year = p.year
+"""
+df = pd.read_sql(query, conn)
+df["ocf_margin"] = df.apply(
+
+    lambda row:
+
+    calculate_ocf_margin(
+
+        row["operating_activity"],
+
+        row["sales"]
+
+    ),axis=1
+)
+
+print("\nOCF MARGIN")
+
+print(df[[
+    "company_id",
+    "year",
+    "sales",
+    "operating_activity",
+    "ocf_margin"
+]].head(15)
+)
+
+
+# Cash conversion ratio
+
+query = """
+SELECT
+
+c.company_id,
+c.year,
+
+c.operating_activity,
+
+p.operating_profit
+
+FROM cashflow c
+
+JOIN profitandloss p
+
+ON c.company_id = p.company_id
+
+AND c.year = p.year
+"""
+df = pd.read_sql(query, conn)
+df["cash_conversion_ratio"] = df.apply(
+
+    lambda row:
+
+    calculate_cash_conversion_ratio(
+
+        row["operating_activity"],
+
+        row["operating_profit"]
+
+    ),axis=1
+)
+
+print("\nCASH CONVERSION RATIO")
+
+print(df[[
+    "company_id",
+    "year",
+    "operating_profit",
+    "operating_activity",
+    "cash_conversion_ratio"
+]].head(15)
+)
+
+
+# Cash reinvestment ratio
+
+query = """
+SELECT
+
+c.company_id,
+c.year,
+
+c.operating_activity,
+
+b.fixed_assets
+
+FROM cashflow c
+
+JOIN balancesheet b
+
+ON c.company_id = b.company_id
+
+AND c.year = b.year
+"""
+df = pd.read_sql(query, conn)
+df["cash_reinvestment_ratio"] = df.apply(
+
+    lambda row:
+
+    calculate_cash_reinvestment_ratio(
+
+        row["operating_activity"],
+
+        row["fixed_assets"]
+
+    ),axis=1
+)
+
+print("\nCASH REINVESTMENT RATIO")
+
+print(df[[
+    "company_id",
+    "year",
+    "fixed_assets",
+    "operating_activity",
+    "cash_reinvestment_ratio"
+]].head(15)
+)
+
+
+# Retention ratio
+
+query = """
+SELECT
+
+company_id,
+year,
+
+dividend_payout
+
+FROM profitandloss
+"""
+df = pd.read_sql(query, conn)
+df["retention_ratio"] = df.apply(
+
+    lambda row:
+
+    calculate_retention_ratio(
+
+        row["dividend_payout"]
+
+    ),axis=1
+)
+print("\nRETENTION RATIO")
+print(df[[
+    "company_id",
+    "year",
+    "dividend_payout",
+    "retention_ratio"
+]].head(15)
+)
+
+query = """
+SELECT *
+FROM balancesheet
+LIMIT 5
+"""
+
+df = pd.read_sql(query, conn)
+
+print(df.columns.tolist())
+
+
+# Financial leverage
+
+query = """
+SELECT
+
+company_id,
+year,
+
+total_assets,
+equity_capital,
+reserves
+
+FROM balancesheet
+"""
+df = pd.read_sql(query, conn)
+
+df["financial_leverage"] = df.apply(
+
+    lambda row:
+
+    calculate_financial_leverage(
+
+        row["total_assets"],
+
+        row["equity_capital"],
+
+        row["reserves"]
+
+    ),axis=1
+)
+print("\nFINANCIAL LEVERAGE")
+
+print(df[[
+
+    "company_id",
+    "year",
+    "total_assets",
+    "equity_capital",
+    "reserves",
+    "financial_leverage"
+
+]].head(15)
+
+)
+
+
+# Debt ratio
+
+query = """
+SELECT
+
+company_id,
+year,
+
+borrowings,
+total_assets
+
+FROM balancesheet
+"""
+df = pd.read_sql(query, conn)
+df["debt_ratio"] = df.apply(
+
+    lambda row:
+
+    calculate_debt_ratio(
+
+        row["borrowings"],
+
+        row["total_assets"]
+
+    ),axis=1
+)
+print("\nDEBT RATIO")
+
+print(df[[
+
+    "company_id",
+    "year",
+    "borrowings",
+    "total_assets",
+    "debt_ratio"
+
+]].head(15)
+)
+
+
+# Capital employed turnover
+
+query = """
+SELECT
+
+p.company_id,
+p.year,
+
+p.sales,
+
+b.equity_capital,
+b.reserves,
+b.borrowings
+
+FROM profitandloss p
+
+JOIN balancesheet b
+
+ON p.company_id = b.company_id
+
+AND p.year = b.year
+"""
+df = pd.read_sql(query, conn)
+df["capital_employed_turnover"] = df.apply(
+
+    lambda row:
+
+    calculate_capital_employed_turnover(
+
+        row["sales"],
+
+        row["equity_capital"],
+
+        row["reserves"],
+
+        row["borrowings"]
+
+    ),axis=1
+
+)
+print("\nCAPITAL EMPLOYED TURNOVER")
+
+print(df[[
+
+    "company_id",
+    "year",
+    "sales",
+    "equity_capital",
+    "reserves",
+    "borrowings",
+    "capital_employed_turnover"
+
+]].head(15)
+)
+
+
+# NET asset turnover
+
+query = """
+SELECT
+
+p.company_id,
+p.year,
+
+p.sales,
+
+b.total_assets,
+b.investments
+
+FROM profitandloss p
+
+JOIN balancesheet b
+
+ON p.company_id = b.company_id
+
+AND p.year = b.year
+"""
+df = pd.read_sql(query, conn)
+df["net_asset_turnover"] = df.apply(
+
+    lambda row:
+
+    calculate_net_asset_turnover(
+
+        row["sales"],
+
+        row["total_assets"],
+
+        row["investments"]
+
+    ),axis=1
+)
+print("\nNET ASSET TURNOVER")
+
+print(df[[
+
+    "company_id",
+    "year",
+    "sales",
+    "total_assets",
+    "investments",
+    "net_asset_turnover"
+
+]].head(15)
+)
+
+
+# Investment ratio
+
+query = """
+SELECT
+
+company_id,
+year,
+
+investments,
+total_assets
+
+FROM balancesheet
+"""
+df = pd.read_sql(query, conn)
+df["investment_ratio"] = df.apply(
+
+    lambda row:
+
+    calculate_investment_ratio(
+
+        row["investments"],
+
+        row["total_assets"]
+
+    ),axis=1
+)
+print("\nINVESTMENT RATIO")
+
+print(df[[
+
+    "company_id",
+    "year",
+    "investments",
+    "total_assets",
+    "investment_ratio"
+
+]].head(15)
+)
+
+
+# Fixed asset ratio
+
+query = """
+SELECT
+
+company_id,
+year,
+
+fixed_assets,
+total_assets
+
+FROM balancesheet
+"""
+df = pd.read_sql(query, conn)
+df["fixed_asset_ratio"] = df.apply(
+
+    lambda row:
+
+    calculate_fixed_asset_ratio(
+
+        row["fixed_assets"],
+
+        row["total_assets"]
+
+    ),axis=1
+)
+print("\nFIXED ASSET RATIO")
+
+print(df[[
+
+    "company_id",
+    "year",
+    "fixed_assets",
+    "total_assets",
+    "fixed_asset_ratio"
+
+]].head(15)
+)
+
+
+# Reserve to equity ratio
+
+query = """
+SELECT
+
+company_id,
+year,
+
+equity_capital,
+reserves
+
+FROM balancesheet
+"""
+df = pd.read_sql(query, conn)
+df["reserve_to_equity_ratio"] = df.apply(
+
+    lambda row:
+
+    calculate_reserve_to_equity_ratio(
+
+        row["reserves"],
+
+        row["equity_capital"]
+
+    ),axis=1
+)
+print("\nRESERVE TO EQUITY RATIO")
+
+print(df[[
+
+    "company_id",
+    "year",
+    "equity_capital",
+    "reserves",
+    "reserve_to_equity_ratio"
+
+]].head(15)
+)
+
+
+# Reserve CAGR (5 year)
+
+query = """
+SELECT
+
+company_id,
+year,
+reserves
+
+FROM balancesheet
+
+ORDER BY
+company_id,
+year
+"""
+reserve_df = pd.read_sql(query, conn)
+reserve_df = reserve_df[
+    reserve_df["year"] != "TTM"
+]
+results = []
+
+companies = reserve_df["company_id"].unique()
+
+for company in companies:
+
+    company_df = reserve_df[
+        reserve_df["company_id"] == company
+    ]
+
+    if len(company_df) < 6:
+
+        results.append({
+
+            "company_id": company,
+
+            "reserve_cagr_5yr": None,
+
+            "flag": "INSUFFICIENT"
+
+        })
+
+        continue
+
+    start_value = company_df.iloc[-6]["reserves"]
+    end_value = company_df.iloc[-1]["reserves"]
+
+    value, flag = calculate_cagr(
+
+        start_value,
+        end_value,5
+
+    )
+
+    results.append({
+
+        "company_id": company,
+
+        "reserve_cagr_5yr": value,
+
+        "flag": flag
+
+    })
+reserve_result = pd.DataFrame(results)
+print("\nRESERVE CAGR")
+
+print(reserve_result.head(15))
+
+print("\nTotal Rows :", len(reserve_result))
+
+
+# Operating profit CAGR (5 year)
+
+query = """
+SELECT
+
+company_id,
+year,
+operating_profit
+
+FROM profitandloss
+
+ORDER BY
+company_id,
+year
+"""
+op_df = pd.read_sql(query, conn)
+
+results = []
+
+companies = op_df["company_id"].unique()
+
+for company in companies:
+
+    company_df = op_df[
+        op_df["company_id"] == company
+    ]
+
+    if len(company_df) < 6:
+
+        results.append({
+
+            "company_id": company,
+
+            "operating_profit_cagr_5yr": None,
+
+            "flag": "INSUFFICIENT"
+
+        })
+
+        continue
+
+    start_value = company_df.iloc[-6]["operating_profit"]
+    end_value = company_df.iloc[-1]["operating_profit"]
+
+    value, flag = calculate_cagr(
+        start_value,
+        end_value,5
+    )
+
+    results.append({
+
+        "company_id": company,
+
+        "operating_profit_cagr_5yr": value,
+
+        "flag": flag
+
+    })
+
+op_result = pd.DataFrame(results)
+
+print("\nOPERATING PROFIT CAGR")
+
+print(op_result.head(15))
+
+print("\nTotal Rows:", len(op_result))
+
+
+# Book value CAGR (5 year)
+
+query = """
+SELECT
+
+company_id,
+year,
+
+equity_capital,
+reserves
+
+FROM balancesheet
+
+ORDER BY
+company_id,
+year
+"""
+
+bv_df = pd.read_sql(query, conn)
+
+# Remove TTM rows if present
+bv_df = bv_df[
+    bv_df["year"] != "TTM"
+]
+
+import numpy as np
+
+# Calculate Book Value
+bv_df["book_value"] = np.where(
+    bv_df["equity_capital"] > 0,
+    (bv_df["equity_capital"] + bv_df["reserves"]) /
+    bv_df["equity_capital"],
+    np.nan
+)
+
+results = []
+
+companies = bv_df["company_id"].unique()
+
+for company in companies:
+
+    company_df = bv_df[
+        bv_df["company_id"] == company
+    ]
+
+    if len(company_df) < 6:
+
+        results.append({
+
+            "company_id": company,
+
+            "book_value_cagr_5yr": None,
+
+            "flag": "INSUFFICIENT"
+
+        })
+
+        continue
+
+    start_value = company_df.iloc[-6]["book_value"]
+    end_value = company_df.iloc[-1]["book_value"]
+
+    value, flag = calculate_cagr(
+        start_value,
+        end_value,5
+    )
+
+    results.append({
+
+        "company_id": company,
+
+        "book_value_cagr_5yr": value,
+
+        "flag": flag
+
+    })
+
+bv_result = pd.DataFrame(results)
+
+print("\nBOOK VALUE CAGR")
+
+print(bv_result.head(15))
+
+print("\nTotal Rows:", len(bv_result))
 conn.close()
