@@ -9,7 +9,7 @@ from ratios import (
 )
 
 
-def profitability_analysis(df):
+def add_profitability_kpis(df):
 
     df["net_profit_margin_pct"] = df.apply(
 

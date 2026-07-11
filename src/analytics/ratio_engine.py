@@ -70,49 +70,6 @@ print(df.head())
 print("\nRows:", len(df))
 
 df = profitability_analysis(df)
-
-df["debt_to_equity"] = df.apply(
-
-    lambda row: 
-        
-        calculate_debt_to_equity(
-
-        row["borrowings"],
-        row["equity_capital"],
-        row["reserves"]
-        
-       ),axis=1
-
-)
-
-
-print("\nDEBT TO EQUITY")
-
-print(
-
-df[
-
-[
-
-"company_id",
-
-"year",
-
-"borrowings",
-
-"equity_capital",
-
-"reserves",
-
-"debt_to_equity"
-
-]
-
-].head()
-
-)
-
-
 df["high_leverage_flag"] = df.apply(
 
     lambda row:
