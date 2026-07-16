@@ -1,5 +1,6 @@
 import pandas as pd
 import yaml
+from scoring1 import calculate_composite_score
 
 
 class ScreenerEngine:
@@ -25,6 +26,7 @@ class ScreenerEngine:
             .tail(1)
             .reset_index(drop=True)
         )
+        self.df = calculate_composite_score(self.df)
 
         with open(config_path, "r") as f:
             self.config = yaml.safe_load(f)
@@ -97,6 +99,10 @@ class ScreenerEngine:
 
             print("After Sales CAGR:", len(filtered_df))
 
+        filtered_df = filtered_df.sort_values(
+            "composite_quality_score",
+                ascending=False
+        )
         return filtered_df
 
 
@@ -151,14 +157,37 @@ for preset in presets:
     print("Companies :", len(result))
 
     print(
-        result[
-            [
-                "company_id",
-                "year"
-            ]
-        ].head(10)
-    )
+    result[
+        [
+            "company_id",
+            "composite_quality_score"
+        ]
+    ].head(10)
+)
     
-print("\nColumns Available:\n")
+print("\nTop 10 Overall Composite Score\n")
 
+print(engine.df[
+        [
+
+            "company_id",
+
+            "composite_quality_score"
+
+        ]].sort_values(
+
+        "composite_quality_score", ascending=False)
+        .head(10))
+print("\nColumns Available:\n")
 print(engine.df.columns.tolist())
+
+# --------------------------------
+# Save Updated Financial KPIs
+# --------------------------------
+
+engine.df.to_csv(
+    "data/output/financial_kpis.csv",
+    index=False
+)
+
+print("\nfinancial_kpis.csv updated successfully.")
