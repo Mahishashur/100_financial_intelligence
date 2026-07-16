@@ -2,7 +2,6 @@ import sqlite3
 import pandas as pd
 
 from ratios import (
-    calculate_debt_to_equity,
     high_leverage_flag,
     calculate_interest_coverage,
     get_icr_label,
@@ -345,10 +344,6 @@ print("\nPAT DATA")
 
 print(pat_df.head())
 
-
-
-
-# =====================================
 # PAT CAGR for all companies
 
 pat_results = []
@@ -547,15 +542,9 @@ growth_df.to_csv(
 )
 
 print("\nGrowth Metrics Saved")
-
-
 print("\nMissing Values")
 
-print(
-
-growth_df.isnull().sum()
-
-)
+print(growth_df.isnull().sum())
 
 # Cashflow data
 
@@ -592,18 +581,13 @@ cash_df["free_cash_flow"] = cash_df.apply(
 
         row["investing_activity"]
 
-    ),
-
-    axis=1
+    ),axis=1
 
 )
 
 
 print("\nFREE CASH FLOW")
-
-print(
-
-cash_df[[
+print(cash_df[[
 
     "company_id",
 
@@ -698,9 +682,6 @@ WHERE company_id='ABB'
 
 print(pd.read_sql(query, conn))
 
-
-import pandas as pd
-
 cash_raw = pd.read_excel(
     "data/raw/core/cashflow.xlsx",
     header=1
@@ -717,15 +698,13 @@ cash_raw.columns = (
 abb = cash_raw[cash_raw["company_id"] == "ABB"]
 
 
-print(
-    abb[[
+print(abb[[
             "year",
             "operating_activity",
             "investing_activity",
             "financing_activity",
             "net_cash_flow"
-        ]
-    ]
+        ]]
 )
 
 # CFO quality
@@ -765,8 +744,7 @@ df["cfo_quality"] = df.apply(
 
 print("\nCFO QUALITY")
 
-print(
-    df[[
+print(df[[
             "company_id",
             "year",
             "operating_activity",
@@ -838,8 +816,6 @@ print(df[[
 
 )
 
-
-
 # CapEx intensity
 
 query = """
@@ -878,7 +854,6 @@ print(df[[
     "capex_intensity"
 ]].head(15)
 )
-
 
 # OCF margin
 
@@ -925,7 +900,6 @@ print(df[[
 ]].head(15)
 )
 
-
 # Cash conversion ratio
 
 query = """
@@ -971,7 +945,6 @@ print(df[[
 ]].head(15)
 )
 
-
 # Cash reinvestment ratio
 
 query = """
@@ -1016,7 +989,6 @@ print(df[[
     "cash_reinvestment_ratio"
 ]].head(15)
 )
-
 
 # Retention ratio
 
@@ -1105,7 +1077,6 @@ print(df[[
 ]].head(15)
 
 )
-
 
 # Debt ratio
 
@@ -1201,7 +1172,6 @@ print(df[[
 
 ]].head(15)
 )
-
 
 # NET asset turnover
 
