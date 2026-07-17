@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import sqlite3
 
 
 # -----------------------------
@@ -95,10 +96,28 @@ def get_pros_cons():
         header=1
     )
     
-@st.cache_data(ttl=600)
-def get_pros_cons():
+# -----------------------------
+# Peer Percentiles
+# -----------------------------
 
-    return pd.read_excel(
-        "data/raw/core/prosandcons.xlsx",
-        header=1
+@st.cache_data(ttl=600)
+def get_peer_percentiles():
+
+    all_sheets = pd.read_excel(
+        "output/peer_comparison.xlsx",
+        sheet_name=None
     )
+
+    print("Sheet Names:", list(all_sheets.keys()))
+
+    for name, df in all_sheets.items():
+        print(name, len(df))
+
+    peer_df = pd.concat(
+        all_sheets.values(),
+        ignore_index=True
+    )
+
+    print("Final Rows:", len(peer_df))
+
+    return peer_df
