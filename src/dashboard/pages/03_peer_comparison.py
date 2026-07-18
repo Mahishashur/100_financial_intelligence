@@ -409,13 +409,6 @@ st.plotly_chart(
     fig,
     use_container_width=True
 )
-
-# Step 12 : Peer Ranking
-
-st.divider()
-
-st.subheader("🏅 Peer Ranking")
-
 ranking_df = peer_kpi_df[
     [
         "company_id",
@@ -426,56 +419,6 @@ ranking_df = peer_kpi_df[
         "composite_quality_score"
     ]
 ].copy()
-
-# Rank by Quality Score
-ranking_df["Rank"] = (
-    ranking_df["composite_quality_score"]
-    .rank(
-        ascending=False,
-        method="dense"
-    )
-)
-
-ranking_df = ranking_df.sort_values(
-    by="Rank"
-)
-
-ranking_df = ranking_df.rename(
-    columns={
-        "company_id": "Company",
-        "sales": "Sales",
-        "net_profit": "Net Profit",
-        "roe_calculated_pct": "ROE (%)",
-        "roce_calculated_pct": "ROCE (%)",
-        "composite_quality_score": "Quality Score"
-    }
-)
-
-# Rank first
-ranking_df = ranking_df[
-    [
-        "Rank",
-        "Company",
-        "Sales",
-        "Net Profit",
-        "ROE (%)",
-        "ROCE (%)",
-        "Quality Score"
-    ]
-]
-
-def highlight_selected(row):
-    if row["Company"] == company_id:
-        return [  "background-color:#14532d;color:white;font-weight:bold"] * len(row)
-    return [""] * len(row)
-
-st.dataframe(
-    ranking_df.style.apply(
-        highlight_selected,
-        axis=1
-    ),
-    use_container_width=True
-)
 
 # Step 13 : Radar Chart
 
