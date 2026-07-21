@@ -1,9 +1,7 @@
 import streamlit as st
 import pandas as pd
-
 import plotly.express as px
 from io import BytesIO
-
 from utils.db import (
     get_companies,
     get_financial_kpis,
@@ -11,17 +9,11 @@ from utils.db import (
 
 st.title("📈 Trend Analysis")
 
-# -------------------------------------------------
-# Step 1 : Load Data
-# -------------------------------------------------
-
+# Load Data
 company_df = get_companies()
-
 kpi_df = get_financial_kpis()
 
-# -------------------------------------------------
-# Step 2 : Company Selection
-# -------------------------------------------------
+# Company Selection
 
 st.divider()
 
@@ -36,11 +28,7 @@ company = company_df[
 
 company_id = str(company["id"]).strip().upper()
 
-# -------------------------------------------------
 # Step 3 : Company Financial Data
-# -------------------------------------------------
-
-st.divider()
 
 # Normalize company_id
 kpi_df["company_id"] = (
@@ -58,9 +46,7 @@ company_kpi_df = kpi_df[
 # Sort by year
 company_kpi_df = company_kpi_df.sort_values("year")
 
-# -------------------------------------------------
 # Step 4 : Profit & Loss Trend Data
-# -------------------------------------------------
 
 pnl_df = pd.read_csv(
     "data/processed/profitandloss_clean.csv"
@@ -82,17 +68,14 @@ company_pnl_df = pnl_df[
 # Sort by year
 company_pnl_df = company_pnl_df.sort_values("year")
 
-# -------------------------------------------------
 # No Data Check
-# -------------------------------------------------
+
 
 if company_pnl_df.empty:
     st.warning("No historical financial data available for this company.")
     st.stop()
 
-# -------------------------------------------------
-# Step 5 : Sales Trend
-# -------------------------------------------------
+# Sales Trend
 
 st.divider()
 
@@ -129,9 +112,7 @@ st.plotly_chart(
     use_container_width=True
 )
 
-# -------------------------------------------------
-# Step 6 : Financial Performance Comparison
-# -------------------------------------------------
+# Financial Performance Comparison
 
 st.divider()
 
@@ -184,10 +165,7 @@ st.plotly_chart(
     use_container_width=True
 )
 
-
-# -------------------------------------------------
 # Step 7 : Financial Summary
-# -------------------------------------------------
 
 latest = company_pnl_df.iloc[-1]
 
@@ -221,9 +199,7 @@ with col4:
         f"{latest['opm_percentage']:.2f}%"
     )
     
-# -------------------------------------------------
-# Step 8 : Growth Analysis
-# -------------------------------------------------
+# Growth Analysis
 
 st.divider()
 
@@ -268,9 +244,7 @@ with col3:
         f"{profit_growth:.1f}%"
     )
     
-# -------------------------------------------------
-# Step 9 : Key Financial Insights
-# -------------------------------------------------
+# Key Financial Insights
 
 st.divider()
 
@@ -328,9 +302,7 @@ st.warning(
     f"({lowest_sales['sales']:,.0f})."
 )
 
-# -------------------------------------------------
 # Step 10 : Operating Profit Margin Trend
-# -------------------------------------------------
 
 st.divider()
 
@@ -361,9 +333,7 @@ st.plotly_chart(
     use_container_width=True
 )
 
-# -------------------------------------------------
-# Step 11 : Year-over-Year Growth Table
-# -------------------------------------------------
+# Year-over-Year Growth Table
 
 st.divider()
 
@@ -397,9 +367,7 @@ st.dataframe(
     hide_index=True
 )
 
-# -------------------------------------------------
-# Step 12 : CAGR Analysis
-# -------------------------------------------------
+# CAGR Analysis
 
 st.divider()
 
@@ -451,9 +419,7 @@ with col3:
         f"{profit_cagr:.2f}%"
     )
     
-# -------------------------------------------------
 # Step 13 : Download Trend Report
-# -------------------------------------------------
 
 st.divider()
 st.subheader("📥 Download Trend Report")
