@@ -1,14 +1,7 @@
-"""
-Sprint 5 - Day 30
-Pros & Cons Generator
-"""
-
 from pathlib import Path
 import pandas as pd
 
-# ==========================================================
 # Paths
-# ==========================================================
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
@@ -31,24 +24,9 @@ print(parsed_df.columns.tolist())
 print("\nPreview")
 print(parsed_df.head())
 
-# ==========================================================
 # Metric Lookup Function
-# ==========================================================
 
 def get_metric(company_df, metric_type, period):
-    """
-    Returns the metric value for a company.
-
-    Parameters
-    ----------
-    company_df : DataFrame
-    metric_type : str
-    period : int
-
-    Returns
-    -------
-    float or None
-    """
 
     result = company_df[
         (company_df["metric_type"] == metric_type) &
@@ -60,9 +38,7 @@ def get_metric(company_df, metric_type, period):
 
     return float(result.iloc[0]["value_pct"])
 
-# ==========================================================
 # Function Test
-# ==========================================================
 
 company = "HDFCBANK"
 
@@ -84,24 +60,15 @@ print("ROE 5Y    :", get_metric(company_df, "roe", 5))
 print("ROE 3Y    :", get_metric(company_df, "roe", 3))
 print("ROE Last Year :", get_metric(company_df, "roe", 1))
 
-# ==========================================================
 # Insight Generator
-# ==========================================================
+
 def generate_insights(company_df):
-    """
-    Generate investment pros and cons for a company.
-    """
 
     pros = []
     cons = []
-    
     score = 0
-    
 
-
-    # -------------------------------
     # Fetch metrics
-    # -------------------------------
 
     sales10 = get_metric(company_df, "compounded_sales_growth", 10)
     sales5 = get_metric(company_df, "compounded_sales_growth", 5)
@@ -118,9 +85,7 @@ def generate_insights(company_df):
     roe10 = get_metric(company_df, "roe", 10)
     roe_last = get_metric(company_df, "roe", 1)
 
-    # -------------------------------
-# Rule 1 - ROE Quality
-# -------------------------------
+    # Rule 1 - ROE Quality
 
     if roe10 is not None:
 
@@ -148,9 +113,7 @@ def generate_insights(company_df):
             f"Low long-term ROE ({roe10:.1f}%), indicating weaker capital efficiency."
         )
 
-    # -------------------------------
 # Rule 2 - Long-term Sales Growth
-# -------------------------------
 
     if sales10 is not None:
 
@@ -178,9 +141,7 @@ def generate_insights(company_df):
             f"Weak long-term sales growth ({sales10:.1f}%)."
         )
             
-    # -------------------------------
 # Rule 3 - Growth Trend
-# -------------------------------
 
     if None not in (sales10, sales5, sales3):
 
@@ -196,9 +157,7 @@ def generate_insights(company_df):
             "Sales growth has gradually slowed over time."
         )
             
-    # -------------------------------
 # Rule 4 - Profit Growth Trend
-# -------------------------------
 
     if None not in (profit10, profit5, profit3):
 
@@ -214,9 +173,7 @@ def generate_insights(company_df):
             "Profit growth has gradually slowed over time."
         )        
     
-    # -------------------------------
 # Rule 5 - Stock vs Business Growth
-# -------------------------------
 
     if stock10 is not None and profit10 is not None:
 
@@ -234,9 +191,7 @@ def generate_insights(company_df):
             "Stock returns have outpaced business profit growth, suggesting possible overvaluation."
         )        
       
-    # ==========================================================
 # Default Messages
-# ==========================================================
 
     if not pros:
         pros.append("No significant strengths identified from available metrics.")
@@ -260,19 +215,16 @@ pros, cons, score, rating = generate_insights(company_df)
 
 print("PROS")
 for p in pros:
-    print("✓", p)
+    print("PROS:", p)
 
 print("\nCONS")
 for c in cons:
-    print("⚠", c)
+    print("CONS:", c)
     
-# ==========================================================
 # Executive Summary Generator
-# ==========================================================
 
 def generate_summary(score, rating, pros, cons):
 
-    # Ignore the default placeholder
     real_cons = [
         c for c in cons
         if "No major concerns" not in c
@@ -312,9 +264,7 @@ def generate_summary(score, rating, pros, cons):
             "Business performance is mixed and should be monitored."
         )
     
-# ==========================================================
 # Generate Insights for All Companies
-# ==========================================================
 
 all_insights = []
 
@@ -325,8 +275,8 @@ for company in companies:
     company_df = parsed_df[
         parsed_df["company_id"] == company
     ]
-    pros, cons, score, rating = generate_insights(company_df)
     
+    pros, cons, score, rating = generate_insights(company_df)
     summary = generate_summary(
         score,
         rating,
@@ -365,9 +315,8 @@ print(insights_df[[
 print("\nGenerated Insights")
 print(insights_df)
 
-# ==========================================================
 # Export Insights
-# ==========================================================
+
 
 output_file = OUTPUT_DIR / "company_insights.csv"
 
